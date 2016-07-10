@@ -21,13 +21,15 @@ var config = {
       // CLI is running from node_modules.
       // This is the default case for all projects created using 'react-web init'.
       return path.resolve(__dirname, '../../..');
+    } else if (__dirname.match(/node_modules[\/\\]\.npminstall[\/\\]react-web[\/\\][\.0-9]*?[\/\\]react-web[\/\\]local-cli$/)){
+      return path.resolve(__dirname, '../../../../../..');
     } else {
       return path.resolve(__dirname, '..');
     }
   },
 
   getWebpackConfig(customConfig) {
-    var webpackConfig = path.join(this.getRoot(), customConfig || WEBPACK_CONFIG);
+    var webpackConfig = customConfig && path.isAbsolute(customConfig) ? customConfig : path.join(this.getRoot(), customConfig || WEBPACK_CONFIG);
     if(!fs.existsSync(webpackConfig)) {
       throw new Error(
         'Can\'t find webpack config file at "' +
